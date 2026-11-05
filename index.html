@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -26,6 +25,7 @@
 
 html {
   scroll-behavior:smooth;
+  scroll-padding-top:20px;
 }
 
 body {
@@ -77,28 +77,47 @@ nav a {
   font-weight:bold;
 }
 
-/* CARRINHO DO CABEÇALHO */
-
-.cart-top {
-  display:flex;
-  justify-content:center;
-  margin:20px auto 0;
+nav a:hover {
+  border-bottom:2px solid var(--rose);
 }
 
+/* CARRINHO FLUTUANTE */
+
 .cart-button {
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:900;
+  display:flex;
+  align-items:center;
+  gap:9px;
   background:var(--choc);
   color:white;
-  border:0;
-  border-radius:30px;
-  padding:12px 25px;
+  border:3px solid white;
+  border-radius:40px;
+  padding:14px 22px;
   font-family:"Josefin Sans",sans-serif;
   font-size:16px;
   font-weight:bold;
   cursor:pointer;
+  box-shadow:0 5px 18px rgba(74,38,35,.3);
+  transition:.2s;
 }
 
 .cart-button:hover {
   background:var(--rose);
+  transform:translateY(-3px);
+}
+
+.cart-count {
+  background:var(--pink);
+  color:var(--choc);
+  border-radius:50%;
+  min-width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  font-size:13px;
 }
 
 /* APRESENTAÇÃO */
@@ -250,8 +269,8 @@ h2 {
 }
 
 .quantity button {
-  width:34px;
-  height:34px;
+  width:36px;
+  height:36px;
   border:0;
   border-radius:50%;
   background:var(--pale);
@@ -276,7 +295,7 @@ h2 {
   border-radius:25px;
   background:var(--rose);
   color:white;
-  padding:12px;
+  padding:13px;
   font-family:"Josefin Sans",sans-serif;
   font-size:15px;
   font-weight:bold;
@@ -292,7 +311,7 @@ h2 {
   margin-top:25px;
 }
 
-/* CARRINHO */
+/* JANELA DO CARRINHO */
 
 .cart-section {
   display:none;
@@ -325,6 +344,7 @@ h2 {
   justify-content:space-between;
   align-items:center;
   gap:10px;
+  margin-bottom:15px;
 }
 
 .cart-header h2 {
@@ -386,10 +406,42 @@ h2 {
   cursor:pointer;
 }
 
-.remove {
-  color:#B33B3B !important;
-  background:transparent !important;
-  font-size:17px;
+.cart-controls .remove {
+  color:#B33B3B;
+  background:transparent;
+  font-size:19px;
+}
+
+.cart-footer {
+  margin-top:20px;
+}
+
+.cart-footer label {
+  display:block;
+  font-weight:bold;
+  color:var(--choc);
+  margin-bottom:7px;
+}
+
+.cart-footer input,
+.cart-footer textarea {
+  width:100%;
+  padding:12px;
+  margin-bottom:18px;
+  border:2px solid var(--pale);
+  border-radius:12px;
+  background:white;
+  color:var(--text);
+  font:inherit;
+}
+
+.cart-footer input:focus,
+.cart-footer textarea:focus {
+  outline:2px solid var(--rose);
+}
+
+.cart-footer textarea {
+  resize:vertical;
 }
 
 .total {
@@ -398,7 +450,7 @@ h2 {
   align-items:center;
   font-size:1.2rem;
   font-weight:bold;
-  margin:22px 0;
+  margin:20px 0;
 }
 
 .finish {
@@ -547,6 +599,8 @@ footer {
   border-top:3px solid var(--pale);
 }
 
+/* CELULAR */
+
 @media(max-width:720px) {
   .story {
     grid-template-columns:1fr;
@@ -560,6 +614,22 @@ footer {
 
   .story h2 {
     text-align:center;
+  }
+
+  .cart-button {
+    right:15px;
+    bottom:15px;
+    padding:12px 17px;
+  }
+
+  .cart-box {
+    padding:18px;
+  }
+}
+
+@media(max-width:380px) {
+  .cart-product {
+    flex-wrap:wrap;
   }
 }
 </style>
@@ -576,11 +646,14 @@ footer {
   <a href="#contato">Contato</a>
 </nav>
 
-<div class="cart-top">
-  <button class="cart-button" onclick="abrirCarrinho()">
-    🛒 Meu carrinho (<span id="cart-count">0</span>)
-  </button>
-</div>
+<!-- BOTÃO FLUTUANTE DO CARRINHO -->
+
+<button class="cart-button" onclick="abrirCarrinho()">
+  🛒 Meu carrinho
+  <span class="cart-count" id="cart-count">0</span>
+</button>
+
+<!-- APRESENTAÇÃO -->
 
 <header class="hero">
   <div class="wrap">
@@ -592,15 +665,20 @@ footer {
   </div>
 </header>
 
+<!-- SOBRE -->
+
 <section id="sobre">
   <div class="wrap story">
+
     <div class="portrait">
       <img src="https://us-prod.asyncgw.teams.microsoft.com/v1/0c67d9f2-1de9-4990-bb21-141399df2857/objects/0-eus-d19-2b0e96f64701e9d7546fcdb8ff739712/views/imgpsh_fullsize" alt="A Lili no forninho">
     </div>
 
     <div>
       <h2>Oi, eu sou a Lili!</h2>
+
       <p>Desde pequena eu rondava o fogão enquanto alguém fazia bolo. Com o tempo, a brincadeira virou paixão, e a paixão virou o Forninho da Lili.</p>
+
       <p>Hoje faço cada encomenda em pequenas fornadas, com receitas que aprendi em casa e ingredientes de verdade. Meu objetivo é simples: que o seu pedido seja a parte mais gostosa da festa.</p>
 
       <ul>
@@ -610,13 +688,20 @@ footer {
         <li>Decoração caprichada</li>
       </ul>
     </div>
+
   </div>
 </section>
 
+<!-- CARDÁPIO -->
+
 <section id="cardapio">
   <div class="wrap">
+
     <h2>Cardápio</h2>
-    <p class="lead">Escolha seus produtos, selecione as quantidades e adicione ao carrinho!</p>
+
+    <p class="lead">
+      Escolha seus produtos, selecione as quantidades e adicione ao carrinho!
+    </p>
 
     <div class="tabs">
       <button class="tab active" data-f="todos">Todos</button>
@@ -628,13 +713,17 @@ footer {
 
     <div class="grid" id="grid"></div>
 
-    <p class="note">Seu pedido fica reunido no carrinho até a finalização pelo WhatsApp. 💗</p>
+    <p class="note">
+      Seu pedido fica reunido no carrinho até a finalização pelo WhatsApp. 💗
+    </p>
+
   </div>
 </section>
 
-<!-- CARRINHO -->
+<!-- JANELA DO CARRINHO -->
 
 <div class="cart-section" id="cart-section">
+
   <div class="cart-box">
 
     <div class="cart-header">
@@ -644,7 +733,24 @@ footer {
 
     <div id="cart-items"></div>
 
-    <div id="cart-footer" hidden>
+    <div class="cart-footer" id="cart-footer" hidden>
+
+      <label for="data-pedido">
+        📅 Para qual dia deseja o pedido?
+      </label>
+
+      <input type="date" id="data-pedido">
+
+      <label for="observacao">
+        📝 Observações do pedido
+      </label>
+
+      <textarea
+        id="observacao"
+        placeholder="Algum detalhe sobre seu pedido? (opcional)"
+        rows="3"
+      ></textarea>
+
       <div class="total">
         <span>Total:</span>
         <span id="cart-total">R$ 0,00</span>
@@ -653,6 +759,7 @@ footer {
       <button class="finish" onclick="finalizarPedido()">
         💬 Finalizar pelo WhatsApp
       </button>
+
     </div>
 
     <span class="continue" onclick="fecharCarrinho()">
@@ -662,11 +769,15 @@ footer {
   </div>
 </div>
 
+<!-- ENCOMENDAS -->
+
 <section id="encomendas" class="band">
   <div class="wrap">
+
     <h2>Como encomendar</h2>
 
     <ol class="steps">
+
       <li>
         <h3>Escolha</h3>
         <p>Veja o cardápio e escolha seus produtos favoritos.</p>
@@ -679,22 +790,28 @@ footer {
 
       <li>
         <h3>Finalize</h3>
-        <p>Envie seu pedido pelo WhatsApp e confirme os detalhes.</p>
+        <p>Escolha a data e envie seu pedido pelo WhatsApp.</p>
       </li>
 
       <li>
         <h3>Receba</h3>
         <p>Combine a retirada ou entrega com a Lili.</p>
       </li>
+
     </ol>
+
   </div>
 </section>
 
+<!-- CONTATO -->
+
 <section id="contato">
   <div class="wrap">
+
     <h2>Contato</h2>
 
     <div class="info">
+
       <div>
         <h3>WhatsApp</h3>
         <p><a href="https://wa.me/5511989634843">(11) 98963-4843</a></p>
@@ -702,13 +819,18 @@ footer {
 
       <div>
         <h3>Instagram</h3>
-        <p><a href="https://instagram.com/forninhodalili" target="_blank">@forninhodalili</a></p>
+        <p>
+          <a href="https://instagram.com/forninhodalili" target="_blank">
+            @forninhodalili
+          </a>
+        </p>
       </div>
 
       <div>
         <h3>Horário</h3>
         <p>Terça a sábado, das 9h às 18h</p>
       </div>
+
     </div>
 
     <p style="text-align:center;margin-top:30px">
@@ -716,6 +838,7 @@ footer {
         Falar com a Lili
       </a>
     </p>
+
   </div>
 </section>
 
@@ -728,6 +851,7 @@ footer {
 // PRODUTOS
 
 var itens = [
+
   ["🍪","Cookie de Brigadeiro","Cookie macio e saboroso, com o delicioso sabor do brigadeiro tradicional.","cookies",8,"https://us-prod.asyncgw.teams.microsoft.com/v1/0c67d9f2-1de9-4990-bb21-141399df2857/objects/0-eus-d6-77cdf5d445f82ca3a22bf539f53a9da3/views/imgpsh_fullsize"],
 
   ["🍪","Cookie de Ninho","Cookie com sabor suave e cremoso de leite em pó.","cookies",8,"https://us-prod.asyncgw.teams.microsoft.com/v1/0c67d9f2-1de9-4990-bb21-141399df2857/objects/0-eus-d19-3af8242ac8f70214e20b390a390afa18/views/imgpsh_fullsize"],
@@ -747,22 +871,28 @@ var itens = [
   ["🍪","Biscoito com Goiabada","Biscoito amanteigado, com textura macia e um delicioso recheio de goiabada, trazendo o equilíbrio perfeito entre a massa e o sabor frutado.","biscoitos",4,"https://us-prod.asyncgw.teams.microsoft.com/v1/0c67d9f2-1de9-4990-bb21-141399df2857/objects/0-eus-d2-34fa367e9cf97c8807a2733260bd4d44/views/imgpsh_fullsize"],
 
   ["🍪","Biscoito sem Goiabada","Biscoito amanteigado tradicional, com textura delicada, sabor suave e uma leve crocância a cada mordida.","biscoitos",3.5,"https://us-prod.asyncgw.teams.microsoft.com/v1/0c67d9f2-1de9-4990-bb21-141399df2857/objects/0-eus-d20-2f54510e0f401e694b5baafd289af38f/views/imgpsh_fullsize"]
+
 ];
 
-// CONFIGURAÇÃO
+// CONFIGURAÇÕES
 
 var numeroWhatsApp = "5511989634843";
+
 var grid = document.getElementById("grid");
+
 var quantidades = {};
+
 var carrinho = {};
 
 // FORMATAÇÃO DE PREÇO
 
 function moeda(valor) {
+
   return valor.toLocaleString("pt-BR", {
     style:"currency",
     currency:"BRL"
   });
+
 }
 
 // MOSTRAR PRODUTOS
@@ -787,9 +917,13 @@ function mostrarProdutos() {
         <div class="price">${moeda(i[4])}</div>
 
         <div class="quantity">
+
           <button onclick="alterarQuantidade(${index},-1)">−</button>
+
           <span id="qtd-${index}">1</span>
+
           <button onclick="alterarQuantidade(${index},1)">+</button>
+
         </div>
 
         <button class="add-button" onclick="adicionarCarrinho(${index})">
@@ -803,9 +937,9 @@ function mostrarProdutos() {
 
 }
 
-// ALTERAR QUANTIDADE DO PRODUTO
+// ALTERAR QUANTIDADE NO CARDÁPIO
 
-function alterarQuantidade(index, valor) {
+function alterarQuantidade(index,valor) {
 
   if (!quantidades[index]) {
     quantidades[index] = 1;
@@ -818,6 +952,7 @@ function alterarQuantidade(index, valor) {
   }
 
   document.getElementById("qtd-"+index).textContent = quantidades[index];
+
 }
 
 // ADICIONAR AO CARRINHO
@@ -835,19 +970,22 @@ function adicionarCarrinho(index) {
   atualizarCarrinho();
 
   quantidades[index] = 1;
+
   document.getElementById("qtd-"+index).textContent = 1;
 
-  var botao = document.querySelectorAll(".add-button")[index];
+  var botao = grid.querySelectorAll(".add-button")[index];
 
   botao.textContent = "✓ Adicionado!";
+
   setTimeout(function() {
     botao.textContent = "+ Adicionar ao carrinho";
   },1200);
+
 }
 
 // ALTERAR QUANTIDADE NO CARRINHO
 
-function alterarCarrinho(index, valor) {
+function alterarCarrinho(index,valor) {
 
   carrinho[index] += valor;
 
@@ -856,6 +994,17 @@ function alterarCarrinho(index, valor) {
   }
 
   atualizarCarrinho();
+
+}
+
+// REMOVER PRODUTO
+
+function removerCarrinho(index) {
+
+  delete carrinho[index];
+
+  atualizarCarrinho();
+
 }
 
 // ATUALIZAR CARRINHO
@@ -863,16 +1012,21 @@ function alterarCarrinho(index, valor) {
 function atualizarCarrinho() {
 
   var container = document.getElementById("cart-items");
+
   var footer = document.getElementById("cart-footer");
 
   var indices = Object.keys(carrinho);
 
   var quantidadeTotal = 0;
+
   var valorTotal = 0;
 
   indices.forEach(function(index) {
+
     quantidadeTotal += carrinho[index];
+
     valorTotal += carrinho[index] * itens[index][4];
+
   });
 
   document.getElementById("cart-count").textContent = quantidadeTotal;
@@ -888,7 +1042,9 @@ function atualizarCarrinho() {
     `;
 
     footer.hidden = true;
+
     return;
+
   }
 
   footer.hidden = false;
@@ -901,16 +1057,25 @@ function atualizarCarrinho() {
       <div class="cart-product">
 
         <div style="flex:1">
+
           <h3>${i[0]} ${i[1]}</h3>
+
           <p>${moeda(i[4])} cada</p>
+
           <strong>${moeda(i[4] * carrinho[index])}</strong>
+
         </div>
 
         <div class="cart-controls">
+
           <button onclick="alterarCarrinho(${index},-1)">−</button>
+
           <strong>${carrinho[index]}</strong>
+
           <button onclick="alterarCarrinho(${index},1)">+</button>
+
           <button class="remove" onclick="removerCarrinho(${index})">×</button>
+
         </div>
 
       </div>
@@ -919,35 +1084,38 @@ function atualizarCarrinho() {
   }).join("");
 
   document.getElementById("cart-total").textContent = moeda(valorTotal);
+
 }
 
-// REMOVER PRODUTO
-
-function removerCarrinho(index) {
-  delete carrinho[index];
-  atualizarCarrinho();
-}
-
-// ABRIR E FECHAR CARRINHO
+// ABRIR CARRINHO
 
 function abrirCarrinho() {
+
   atualizarCarrinho();
+
   document.getElementById("cart-section").classList.add("open");
+
 }
+
+// FECHAR CARRINHO
 
 function fecharCarrinho() {
+
   document.getElementById("cart-section").classList.remove("open");
+
 }
 
-// FECHAR AO CLICAR FORA
+// FECHAR CLICANDO FORA
 
 document.getElementById("cart-section").addEventListener("click",function(e) {
+
   if (e.target === this) {
     fecharCarrinho();
   }
+
 });
 
-// FILTRO DE CATEGORIAS
+// FILTRO DAS CATEGORIAS
 
 document.querySelectorAll(".tab").forEach(function(botao) {
 
@@ -962,23 +1130,56 @@ document.querySelectorAll(".tab").forEach(function(botao) {
     var filtro = this.dataset.f;
 
     grid.querySelectorAll(".item").forEach(function(item) {
+
       item.hidden = !(filtro === "todos" || item.dataset.c === filtro);
+
     });
 
   });
 
 });
 
-// FINALIZAR PELO WHATSAPP
+// IMPEDIR DATAS PASSADAS
+
+var hoje = new Date();
+
+hoje.setMinutes(hoje.getMinutes() - hoje.getTimezoneOffset());
+
+document.getElementById("data-pedido").min =
+  hoje.toISOString().split("T")[0];
+
+// FINALIZAR PEDIDO
 
 function finalizarPedido() {
 
   var indices = Object.keys(carrinho);
 
   if (indices.length === 0) {
+
     alert("Seu carrinho está vazio!");
+
     return;
+
   }
+
+  var data = document.getElementById("data-pedido").value;
+
+  var observacao = document.getElementById("observacao").value;
+
+  if (data === "") {
+
+    alert("Por favor, escolha a data do pedido!");
+
+    document.getElementById("data-pedido").focus();
+
+    return;
+
+  }
+
+  var partesData = data.split("-");
+
+  var dataFormatada =
+    partesData[2] + "/" + partesData[1] + "/" + partesData[0];
 
   var mensagem = "Olá, Lili! Gostaria de fazer uma encomenda:\n\n";
 
@@ -987,20 +1188,32 @@ function finalizarPedido() {
   indices.forEach(function(index) {
 
     var produto = itens[index];
+
     var quantidade = carrinho[index];
+
     var subtotal = produto[4] * quantidade;
 
     mensagem +=
       "• " + produto[1] +
-      "\n  Quantidade: " + quantidade +
-      "\n  Valor: " + moeda(subtotal) + "\n\n";
+      "\nQuantidade: " + quantidade +
+      "\nValor: " + moeda(subtotal) + "\n\n";
 
     total += subtotal;
 
   });
 
   mensagem += "------------------------\n";
+
   mensagem += "TOTAL: " + moeda(total);
+
+  mensagem += "\n\n📅 DATA DESEJADA: " + dataFormatada;
+
+  if (observacao.trim() !== "") {
+
+    mensagem += "\n\n📝 OBSERVAÇÕES: " + observacao;
+
+  }
+
   mensagem += "\n\nGostaria de confirmar meu pedido!";
 
   var link = "https://wa.me/" + numeroWhatsApp +
@@ -1013,9 +1226,11 @@ function finalizarPedido() {
 // INICIAR SITE
 
 mostrarProdutos();
+
 atualizarCarrinho();
 
 </script>
 
 </body>
 </html>
+
