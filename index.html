@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -412,6 +413,8 @@ h2 {
   font-size:19px;
 }
 
+/* FORMULÁRIO DO PEDIDO */
+
 .cart-footer {
   margin-top:20px;
 }
@@ -424,7 +427,8 @@ h2 {
 }
 
 .cart-footer input,
-.cart-footer textarea {
+.cart-footer textarea,
+.cart-footer select {
   width:100%;
   padding:12px;
   margin-bottom:18px;
@@ -436,7 +440,8 @@ h2 {
 }
 
 .cart-footer input:focus,
-.cart-footer textarea:focus {
+.cart-footer textarea:focus,
+.cart-footer select:focus {
   outline:2px solid var(--rose);
 }
 
@@ -444,13 +449,21 @@ h2 {
   resize:vertical;
 }
 
+#endereco-area[hidden] {
+  display:none;
+}
+
 .total {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:1.2rem;
+  display:block;
+  font-size:1rem;
   font-weight:bold;
   margin:20px 0;
+  line-height:1.9;
+}
+
+.total strong {
+  font-size:1.2rem;
+  color:var(--choc);
 }
 
 .finish {
@@ -735,6 +748,25 @@ footer {
 
     <div class="cart-footer" id="cart-footer" hidden>
 
+      <label for="recebimento">
+        📦 Como deseja receber seu pedido?
+      </label>
+
+      <select id="recebimento" onchange="alterarRecebimento()">
+        <option value="">Selecione uma opção</option>
+        <option value="retirada">Vou retirar o pedido (grátis)</option>
+        <option value="entrega">Quero receber em casa (+ R$ 3,00)</option>
+      </select>
+
+      <div id="endereco-area" hidden>
+        <label for="endereco">📍 Endereço para entrega</label>
+        <textarea
+          id="endereco"
+          placeholder="Rua, número, bairro e complemento"
+          rows="2"
+        ></textarea>
+      </div>
+
       <label for="data-pedido">
         📅 Para qual dia deseja o pedido?
       </label>
@@ -751,10 +783,7 @@ footer {
         rows="3"
       ></textarea>
 
-      <div class="total">
-        <span>Total:</span>
-        <span id="cart-total">R$ 0,00</span>
-      </div>
+      <div class="total" id="cart-total"></div>
 
       <button class="finish" onclick="finalizarPedido()">
         💬 Finalizar pelo WhatsApp
@@ -790,12 +819,12 @@ footer {
 
       <li>
         <h3>Finalize</h3>
-        <p>Escolha a data e envie seu pedido pelo WhatsApp.</p>
+        <p>Escolha a data e a forma de recebimento e envie seu pedido pelo WhatsApp.</p>
       </li>
 
       <li>
         <h3>Receba</h3>
-        <p>Combine a retirada ou entrega com a Lili.</p>
+        <p>Combine os detalhes da encomenda com a Lili.</p>
       </li>
 
     </ol>
@@ -1007,6 +1036,25 @@ function removerCarrinho(index) {
 
 }
 
+// ALTERAR FORMA DE RECEBIMENTO
+
+function alterarRecebimento() {
+
+  var tipo = document.getElementById("recebimento").value;
+
+  var endereco = document.getElementById("endereco-area");
+
+  if (tipo === "entrega") {
+    endereco.hidden = false;
+  } else {
+    endereco.hidden = true;
+    document.getElementById("endereco").value = "";
+  }
+
+  atualizarCarrinho();
+
+}
+
 // ATUALIZAR CARRINHO
 
 function atualizarCarrinho() {
@@ -1083,7 +1131,17 @@ function atualizarCarrinho() {
 
   }).join("");
 
-  document.getElementById("cart-total").textContent = moeda(valorTotal);
+  var recebimento = document.getElementById("recebimento").value;
+
+  var frete = recebimento === "entrega" ? 3 : 0;
+
+  var totalElemento = document.getElementById("cart-total");
+
+  totalElemento.innerHTML = `
+    <div>Subtotal: ${moeda(valorTotal)}</div>
+    <div>Frete: ${moeda(frete)}</div>
+    <div><strong>Total: ${moeda(valorTotal + frete)}</strong></div>
+  `;
 
 }
 
@@ -1166,6 +1224,30 @@ function finalizarPedido() {
 
   var observacao = document.getElementById("observacao").value;
 
+  var recebimento = document.getElementById("recebimento").value;
+
+  var endereco = document.getElementById("endereco").value.trim();
+
+  if (recebimento === "") {
+
+    alert("Escolha como deseja receber seu pedido!");
+
+    document.getElementById("recebimento").focus();
+
+    return;
+
+  }
+
+  if (recebimento === "entrega" && endereco === "") {
+
+    alert("Informe o endereço para entrega!");
+
+    document.getElementById("endereco").focus();
+
+    return;
+
+  }
+
   if (data === "") {
 
     alert("Por favor, escolha a data do pedido!");
@@ -1202,11 +1284,29 @@ function finalizarPedido() {
 
   });
 
+  var frete = recebimento === "entrega" ? 3 : 0;
+
   mensagem += "------------------------\n";
 
-  mensagem += "TOTAL: " + moeda(total);
+  mensagem += "Subtotal: " + moeda(total) + "\n";
+
+  mensagem += "Frete: " + moeda(frete) + "\n";
+
+  mensagem += "TOTAL: " + moeda(total + frete);
 
   mensagem += "\n\n📅 DATA DESEJADA: " + dataFormatada;
+
+  if (recebimento === "retirada") {
+
+    mensagem += "\n\n📦 RECEBIMENTO: Retirada";
+
+  } else {
+
+    mensagem += "\n\n📦 RECEBIMENTO: Entrega em casa";
+
+    mensagem += "\n📍 ENDEREÇO: " + endereco;
+
+  }
 
   if (observacao.trim() !== "") {
 
@@ -1233,4 +1333,3 @@ atualizarCarrinho();
 
 </body>
 </html>
-
